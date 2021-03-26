@@ -1,6 +1,6 @@
 # VenmoToolbox
   
-## This is a small project I made to interact with the venmo api. It is only written in python and uses only the standard library. Credit due to https://github.com/mmohade for the unofficial api documention.  
+## This is a small project I made to interact with the venmo api. It is only written in python and uses only the standard library. Credit due to https://github.com/mmohades for the unofficial api documention.  
 
 <br>
 
