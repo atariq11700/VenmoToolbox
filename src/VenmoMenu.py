@@ -2,11 +2,7 @@ import VenmoToolbox
 import getpass
 
 
-        
-       
-class Menu():
-
-    class __MenuOption():
+class MenuOption():
         def __init__(self, optionID, optionMsg, optionCallback):
             
             self.__optionId = optionID
@@ -15,18 +11,19 @@ class Menu():
 
         def __str__(self) -> str:
             
-            return "\t" + str(self.__optionId) + ") " + self.__optionMsg
+            return  str(self.__optionId) + ") " + self.__optionMsg
 
         def call(self) -> None:
             
             self.__optionCallback()
-
+       
+class Menu():
 
     def __init__(self, name, header = ""):
         
         self.__name = name
         self.__header = header
-        self.__options  = list()
+        self.__options : list[MenuOption] = list()
         self.__menuActive = False
 
     def __str__(self) -> str:
@@ -41,12 +38,12 @@ class Menu():
 
         for option in self.__options:
         
-            finalString += str(option) + "\n"
+            finalString += "\t" + str(option) + "\n"
 
         return finalString
 
     def addOption(self, optionMsg, callback) -> None:
-        self.__options.append(self.__MenuOption(len(self.__options) + 1, optionMsg, callback))
+        self.__options.append(MenuOption(len(self.__options) + 1, optionMsg, callback))
 
     def setHeader(self, header) -> None:
         self.__header = header
@@ -89,7 +86,7 @@ class Menu():
 
 
 class VenmoUser():
-    def __init__(self, userInfo, toolbox : VenmoToolbox):
+    def __init__(self, userInfo, toolbox : VenmoToolbox.VenmoToolbox):
         self.__userInfo = userInfo
         self.__id = int(userInfo["id"])
         self.__username = userInfo["username"]
@@ -104,7 +101,7 @@ class VenmoUser():
 
         if (status == "friend"):
             return True
-
+        
         return False
 
     def getFriendStatus(self) -> bool:
