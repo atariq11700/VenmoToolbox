@@ -1,6 +1,17 @@
 import VenmoToolbox
 import getpass
 
+def enumerateAndPrintDict(object) -> None:
+        
+        for key in object:
+        
+            if (type(object[key]) == type(dict())):
+        
+                enumerateAndPrintDict(object[key])
+        
+            else:
+        
+                print(key[0].upper() + key[1:] + " :", object[key])
 
 class MenuOption():
         def __init__(self, optionID, optionMsg, optionCallback):
@@ -137,6 +148,86 @@ class VenmoUser():
         else:
             print("Friend request not sent.")
 
+    def sendMoney(self) -> bool:
+        amount = 0
+        try:
+            amount = float(input("Enter the amount of money to send.\n:>"))
+
+        except:
+            print("Not a valid dollar value")
+            return False
+
+        paymentID = 0
+        paymentIDs = []
+        try:
+            paymentMethods = self.__toolbox.getPaymentMethods()
+            print("")
+
+
+            if (paymentMethods.get("data", "") == ""):
+                print("Error getting payment methods data.")
+                return
+
+
+            for method in paymentMethods["data"]:
+                print("Type: " + method["type"])
+                print("Name: " + method["name"])
+                print("Last-Four: " + str(method["last_four"]))
+                paymentIDs.append(method["id"])
+                print("ID: " + method["id"])
+                print("")
+
+            paymentID = int(input("Enter the id of the payment method you would like to user.\n:>"))
+
+            if (paymentID not in paymentIDs):
+                raise Exception
+        
+        except:
+            print("Not a valid ID.")
+            return False
+
+        msg = input("Enter a msg for the transaction.\n:>")
+
+        if (msg == ""):
+            print("Must enter a msg.")
+            return False
+
+        return self.__toolbox.sendMoneyByUserID(amount, self.__id, paymentID, msg)
+
+    def requestMoney(self):
+        amount = 0
+        try:
+            amount = float(input("Enter the amount of money to request.\n:>"))
+
+        except:
+            print("Not a valid dollar value")
+            return False
+
+        msg = input("Enter a msg for the transaction.\n:>")
+
+        if (msg == ""):
+            print("Must enter a msg.")
+            return False
+
+        return self.__toolbox.requestMoneyByUserID(amount, self.__id, msg)
+
+    def listFriends(self):
+        friends = self.__toolbox.getUsersFriends(self.__id)
+
+        if (friends.get("data", "") != ""):
+            for friend in friends["data"]:
+                print("")
+                print("Name: " + friend["first_name"] + " "  + friend["last_name"])
+                print("Username: " + friend["username"])
+                print("ID: "  + friend["id"])
+        else:
+            print("Error getting friend data.")
+
+    def displayAccInfo(self):
+        userInfo = self.__toolbox.getUserInformationByID(self.__id)
+        enumerateAndPrintDict(userInfo)
+        
+
 
 
 class VenmoMenu():
@@ -176,8 +267,6 @@ class VenmoMenu():
 
         menu = Menu("Main Menu")
         menu.setHeader("Account :" + " " + self.__toolbox.username)
-        menu.addOption("Send Money", self.l)
-        menu.addOption("Request Money", self.l)
         menu.addOption("Show Account Information", self.__displayAccInfoHandler)
         menu.addOption("Show Account Venmo Balance", self.__getBalance)
         menu.addOption("List Friends", self.__listFriends)
@@ -188,10 +277,6 @@ class VenmoMenu():
         menu.addOption("User lookup with user action menu", self.__userLookUpWithMenu)
         menu.addOption("Exit", menu.exit)
         menu.showMenu()
-
-
-    def l(self):
-        pass
 
 
     def __userLookUpWithMenu(self) -> None:
@@ -243,6 +328,11 @@ class VenmoMenu():
         menu.setHeader("Acccout:\n\tUsername: {}\n\tID: {}\n\tName: {} {}".format(userData["username"], userData["id"], userData["first_name"], userData["last_name"]))
         menu.addOption("Is Friend?", lambda : print("Friend Status: " + userData["friend_status"]))
         menu.addOption("Send Friend Request", user.sendFriendRequest)
+        menu.addOption("Send Money", user.sendMoney)
+        menu.addOption("Request Money", user.requestMoney)
+        menu.addOption("Display Account Info", user.displayAccInfo)
+        menu.addOption("Show Friends", user.listFriends)
+
 
         menu.addOption("Exit", menu.exit)
 
@@ -329,7 +419,7 @@ class VenmoMenu():
 
                     userInfo = self.__toolbox.getUserInformationByUsername(username)
 
-                self.__enumerateAndPrintDict(userInfo)
+                enumerateAndPrintDict(userInfo)
 
             else:
 
@@ -379,7 +469,7 @@ class VenmoMenu():
 
         elif (verboseLevel == 3):
 
-            self.enumerateAndPrintDict(self.__toolbox.accJson)
+            enumerateAndPrintDict(self.__toolbox.accJson)
         
         elif (verboseLevel == 4):
         
@@ -391,17 +481,6 @@ class VenmoMenu():
 
 
 
-    def __enumerateAndPrintDict(self, object) -> None:
-        
-        for key in object:
-        
-            if (type(object[key]) == type(dict())):
-        
-                self.__enumerateAndPrintDict(object[key])
-        
-            else:
-        
-                print(key[0].upper() + key[1:] + " :", object[key])
 
 
 
