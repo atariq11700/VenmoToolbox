@@ -34,13 +34,14 @@ class VenmoToolbox():
                     -contains all the venmo api endpoints used in the toolbox
             @var `defaultHeaders : dict`
                     -default headers sent in most requests. Some api requests copy and modify these headers
-
-        Args:
-            @param `autoRevokeTokenOnDelete : bool`
-                    -dictates whether to send the request to delete the token issued on login when the instance in destructed. Default value is True
     """
 
     def __init__(self, autoRevokeTokenOnDelete = True):
+        """
+            Args:
+                @param `autoRevokeTokenOnDelete : bool`
+                        -dictates whether to send the request to delete the token issued on login when the instance in destructed. Default value is True
+        """
 
         self.bearerToken = ""
         self.username = ""
