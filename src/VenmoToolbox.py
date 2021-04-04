@@ -444,6 +444,20 @@ class VenmoToolbox():
         return json.loads(response.text)
 
 
+    def getUsersFriends(self, userID) -> dict:
+        """
+            Brief:
+                Gets a user's friend list
+
+            Returns:
+                `dict`: the users friends as json
+        """
+        response  = self.session.get(self.endpoints["base"] + self.endpoints["friends"].format(userID), headers = self.defaultHeaders)
+
+
+        return json.loads(response.text)
+
+
 
     def sendMoneyByUsername(self, amount, username , paymentID, msg, audienceVisibility = 0 ) -> bool:
         """
