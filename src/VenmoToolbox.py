@@ -233,7 +233,7 @@ class VenmoToolbox():
         
         get2FAHeaders = self.defaultHeaders.copy()
         get2FAHeaders.pop("Authorization")
-        get2FAHeaders.update("venmo-otp-secret", otp_secret)
+        get2FAHeaders.update({"venmo-otp-secret", otp_secret})
 
         response = self.session.get(self.endpoints["base"] + self.endpoints["2FAGet"], headers = get2FAHeaders)
 
@@ -277,8 +277,8 @@ class VenmoToolbox():
          
         login2FAHeaders = self.defaultHeaders.copy()
         login2FAHeaders.pop("Authorization")
-        login2FAHeaders.update("venmo-otp-secret", otpHeader)
-        login2FAHeaders.update("Venmo-Otp", otpSMS)
+        login2FAHeaders.update({"venmo-otp-secret", otpHeader})
+        login2FAHeaders.update({"Venmo-Otp", otpSMS})
         
 
         authFile = open("auth.json")
